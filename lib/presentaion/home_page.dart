@@ -18,14 +18,12 @@ class HomePage extends StatelessWidget {
               final restaurantDetails = state.restaurentDetails;
               final tableMenuList = restaurantDetails!.tableMenuList ?? [];
               final dishesList = tableMenuList[0].categoryDishes;
-              final ValueNotifier<List<CartModel>> cartListNotifier =
-                  ValueNotifier([]);
+              final ValueNotifier dishQuanity = ValueNotifier(1);
               return ListView.builder(
                 itemCount: dishesList!.length,
                 itemBuilder: (context, index) {
-                  int dishQuanity = 1;
                   return ValueListenableBuilder(
-                    valueListenable: cartListNotifier,
+                    valueListenable: dishQuanity,
                     builder: (context, value, child) {
                       return Container(
                           width: double.infinity,
@@ -47,22 +45,23 @@ class HomePage extends StatelessWidget {
                                 ],
                               ),
                               Text('${dishesList[index].dishName}'),
-                              Text('\$${dishesList[index].dishPrice}'),
+                              Text(
+                                  '\$${dishesList[index].dishPrice! * dishQuanity.value}'),
                               Row(
                                 children: [
                                   IconButton(
                                     onPressed: () {
-                                      if (dishQuanity == 0) {
+                                      if (dishQuanity.value == 1) {
                                         return;
                                       }
-                                      dishQuanity--;
+                                      dishQuanity.value = dishQuanity.value - 1;
                                     },
                                     icon: const Icon(Icons.remove),
                                   ),
-                                  Text('$dishQuanity'),
+                                  Text('${dishQuanity.value}'),
                                   IconButton(
                                     onPressed: () {
-                                      dishQuanity++;
+                                      dishQuanity.value = dishQuanity.value + 1;
                                     },
                                     icon: const Icon(Icons.add),
                                   ),
